@@ -1,8 +1,14 @@
 package com.youjian.blog.user.controller;
 
+import com.youjian.blog.user.utils.BlogKit;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.security.Principal;
 
 /**
  * 主页控制器

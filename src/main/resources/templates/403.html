@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>博客</title>
+</head>
+<body>
+<div src:authorize="isAuthenticated()">
+    <h1 th:text="${#authentication.name}+ '用户没有权限'"></h1>
+</div>
+<div src:authorize="isAnonymous">
+    <h1>没有权限访问</h1>
+</div>
+</body>
+</html>

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -87,6 +88,8 @@ public class UserController {
 //        return new ModelAndView("/users/view", "userModel", model);
 //    }
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
     public ModelAndView saveOrUpdate(User user) {
@@ -95,9 +98,12 @@ public class UserController {
         if (BlogKit.isEmpty(user.getAvatar())){
             user.setAvatar("https://waylau.com/images/waylau_181_181.jpg");
         }
-        User dbUser = null;
+        User dbUser;
         // 使用 persistence 包下的注解进行校验修饰, 再存储到数据库中时会抛出异常
         // ConstraintViolationException
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         dbUser = userService.registerUser(user);
         if (dbUser != null) {
             return new ModelAndView("redirect:/login");

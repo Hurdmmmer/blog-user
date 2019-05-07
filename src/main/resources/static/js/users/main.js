@@ -91,9 +91,17 @@ $(function () {
 
     // 删除用户
     $("#rightContainer").on("click", ".blog-delete-user", function () {
+
+        var csrfToken = $("meta[name='_csrf']").attr("content");
+        var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
         $.ajax({
             url: "/users/" + $(this).attr("userId"),
             type: "DELETE",
+            beforeSend: function(req) {
+                // csrf 防护
+                req.setRequestHeader(csrfToken, csrfHeader);
+            },
             success: function (data) {
                 if (data.success) {
                     getUserByName(0, _pageSize);
