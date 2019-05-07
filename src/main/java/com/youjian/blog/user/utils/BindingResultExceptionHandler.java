@@ -21,4 +21,9 @@ public class BindingResultExceptionHandler {
         List<ObjectError> errors = e.getAllErrors();
         return errors.stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(";"));
     }
+
+    public static String getMessage(ConstraintViolationException e) {
+        Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
+        return constraintViolations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(";"));
+    }
 }

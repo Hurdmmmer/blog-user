@@ -7,12 +7,19 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.ConstraintViolationException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(BindException.class)
+    @ExceptionHandler({BindException.class, ConstraintViolationException.class})
     @ResponseBody
-    public ResponseResult handlerEx( Exception exception) {
-        String message = BindingResultExceptionHandler.getMessage((BindingResult) exception);
+    public ResponseResult handlerEx(Exception exception) {
+        String message = null;
+        if (exception instanceof ConstraintViolationException) {
+            message = BindingResultExceptionHandler.getMessage((ConstraintViolationException) exception);
+        } else {
+            message = BindingResultExceptionHandler.getMessage((BindingResult) exception);
+        }
         return ResponseResult.fail(message);
     }
 }

@@ -1,6 +1,8 @@
 package com.youjian.blog.user.controller;
 
+import com.youjian.blog.user.entity.Authority;
 import com.youjian.blog.user.entity.User;
+import com.youjian.blog.user.service.AuthorityService;
 import com.youjian.blog.user.service.UserService;
 import com.youjian.blog.user.utils.BlogKit;
 import com.youjian.blog.user.vo.ResponseResult;
@@ -15,14 +17,20 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
+    private static final Long ROLE_USER_AUTHORITY_ID = 2l;
     @Autowired
     private UserService userService;
+    @Autowired
+    private AuthorityService authorityService;
 
     /** 获取用户列表, 返回用户列表的 HTML 视图 */
     @GetMapping
@@ -49,11 +57,15 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseResult addUser(@Valid User user, BindingResult bindingResult) throws BindException {
+    public ResponseResult addUser(@Valid User user, BindingResult bindingResult, Long authorityId) throws BindException {
         if (bindingResult.hasErrors()) {
 //            List<ObjectError> allErrors = bindingResult.getAllErrors();
             throw new BindException(bindingResult);
         }
+
+        Authority authority = authorityService.getAuthorityById(authorityId);
+        user.setAuthorities(Collections.singletonList(authority));
+
         if (BlogKit.isEmpty(user.getAvatar())){
             user.setAvatar("https://waylau.com/images/waylau_181_181.jpg");
         }
@@ -64,24 +76,29 @@ public class UserController {
         return ResponseResult.fail("添加或修改用户失败. 请稍后重试...");
     }
 
-    /**
-     * 根据 id 查询用户
-     */
-    @GetMapping("/{id}")
-    public ModelAndView view(@PathVariable("id") Long id, Model model) {
-        User user = userService.getUserById(id);
-        model.addAttribute("user", user);
-        model.addAttribute("title", "查看用户");
-        return new ModelAndView("/users/view", "userModel", model);
-    }
+//    /**
+//     * 根据 id 查询用户
+//     */
+//    @GetMapping("/{id}")
+//    public ModelAndView view(@PathVariable("id") Long id, Model model) {
+//        User user = userService.getUserById(id);
+//        model.addAttribute("user", user);
+//        model.addAttribute("title", "查看用户");
+//        return new ModelAndView("/users/view", "userModel", model);
+//    }
 
 
     @PostMapping("/register")
     public ModelAndView saveOrUpdate(User user) {
+        Authority authority = authorityService.getAuthorityById(ROLE_USER_AUTHORITY_ID);
+        user.setAuthorities(Collections.singletonList(authority));
         if (BlogKit.isEmpty(user.getAvatar())){
             user.setAvatar("https://waylau.com/images/waylau_181_181.jpg");
         }
-        User dbUser = userService.registerUser(user);
+        User dbUser = null;
+        // 使用 persistence 包下的注解进行校验修饰, 再存储到数据库中时会抛出异常
+        // ConstraintViolationException
+        dbUser = userService.registerUser(user);
         if (dbUser != null) {
             return new ModelAndView("redirect:/login");
         }
@@ -89,7 +106,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseResult delete(@PathVariable("id") Long id, Model model) {
+    public ResponseResult delete(@PathVariable("id") Long id) {
         userService.removeUser(id);
         return ResponseResult.success(null);
     }
