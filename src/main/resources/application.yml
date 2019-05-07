@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      jdbc-url: jdbc:mysql://192.168.72.79:3307/blog?useUnicode=true&characterEncoding=UTF-8
+      username: root
+      password: 123456
+
+  thymeleaf:
+    cache: false
