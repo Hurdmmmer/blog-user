@@ -8,8 +8,7 @@ spring:
 
   thymeleaf:
     cache: false
-#  security:
-#    user:
-#      name: user
-#      password: 111111
-#      roles: ADMIN
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop

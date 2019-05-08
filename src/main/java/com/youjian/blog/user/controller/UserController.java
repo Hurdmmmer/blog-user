@@ -14,20 +14,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private static final Long ROLE_USER_AUTHORITY_ID = 2l;
+    private static final Long ROLE_USER_AUTHORITY_ID = 2L;
     @Autowired
     private UserService userService;
     @Autowired
@@ -76,17 +73,6 @@ public class UserController {
         }
         return ResponseResult.fail("添加或修改用户失败. 请稍后重试...");
     }
-
-//    /**
-//     * 根据 id 查询用户
-//     */
-//    @GetMapping("/{id}")
-//    public ModelAndView view(@PathVariable("id") Long id, Model model) {
-//        User user = userService.getUserById(id);
-//        model.addAttribute("user", user);
-//        model.addAttribute("title", "查看用户");
-//        return new ModelAndView("/users/view", "userModel", model);
-//    }
 
     @Autowired
     private PasswordEncoder passwordEncoder;
