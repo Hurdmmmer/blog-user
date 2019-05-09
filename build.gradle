@@ -29,6 +29,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     // 改依赖会自动给form表单添加 CSRF 安全防护, 其他请求则没有需要注意
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE'
+    // markdown 解析
+    implementation 'es.nitaur.markdown:txtmark:0.16'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.apache.commons:commons-lang3:3.5'

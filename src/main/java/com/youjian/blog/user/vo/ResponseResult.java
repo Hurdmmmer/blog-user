@@ -7,6 +7,7 @@ public class ResponseResult<T> {
     private boolean success;
     private String message;
     private T body;
+    private String url;
 
     private ResponseResult() {}
 
@@ -21,6 +22,14 @@ public class ResponseResult<T> {
         ResponseResult<Object> result = new ResponseResult<>();
         result.setSuccess(false);
         result.setMessage(msg);
+        return result;
+    }
+
+    public static ResponseResult success(String msg, String avatarUrl) {
+        ResponseResult<Object> result = new ResponseResult<>();
+        result.setSuccess(true);
+        result.setMessage(msg);
+        result.setUrl(avatarUrl);
         return result;
     }
 }
